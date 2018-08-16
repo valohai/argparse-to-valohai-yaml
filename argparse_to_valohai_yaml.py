@@ -11,7 +11,7 @@ def first(iterable):
         return value
 
 
-type_map = {int: 'int', float: 'float', bool: 'flag'}
+type_map = {int: 'integer', float: 'float', bool: 'flag'}
 
 
 def yaml_dump_dict_of_lists(lst):
