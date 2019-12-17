@@ -1,6 +1,7 @@
 import argparse
 import json
 import re
+import sys
 import textwrap
 from collections import OrderedDict
 from io import StringIO
@@ -56,7 +57,10 @@ def convert_parser(ap):
             if arg.default:
                 parameter_def['default'] = arg.default
         else:
-            print('Warning: Not sure about the type %s for %s' % (arg.type, arg.dest))
+            print(
+                'Warning: Not sure about the type %s for %s' % (arg.type, arg.dest),
+                file=sys.stderr,
+            )
 
         if arg.help:
             parameter_def['description'] = re.sub(
