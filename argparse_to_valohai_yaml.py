@@ -45,22 +45,24 @@ def convert_parser(ap):
             continue
         longest_option_string = first(sorted(arg.option_strings, key=len, reverse=True))
         type = type_map.get(arg.type)
+        pass_as_suffix = '' if type == 'flag' else '={v}'
         parameter_def = OrderedDict(
             [
                 ('name', arg.dest.replace('_', ' ')),
-                ('pass-as', longest_option_string + '={v}'),
+                ('pass-as', longest_option_string + pass_as_suffix),
             ]
         )
 
         if type:
             parameter_def['type'] = type
-            if arg.default:
-                parameter_def['default'] = arg.default
         else:
             print(
                 'Warning: Not sure about the type %s for %s' % (arg.type, arg.dest),
                 file=sys.stderr,
             )
+
+        if arg.default:
+            parameter_def['default'] = arg.default
 
         if arg.help:
             parameter_def['description'] = re.sub(
