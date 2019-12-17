@@ -85,3 +85,53 @@ def dump_parameter_defs(parameter_defs):
         parameter_defs = convert_parser(parameter_defs)
 
     return yaml_dump_dict_of_lists(parameter_defs)
+
+
+def dump_from_source(filename):
+    """
+    Dump all argument parsers declared by the source in `filename`.
+
+    This DOES evaluate the source code, so do not run it on untrusted
+    files.
+    """
+    with open(filename, 'r') as infp:
+        code = compile(infp.read(), filename, 'exec')
+    loc = {}
+    exec(code, loc, loc)
+    for name, value in loc.items():
+        if isinstance(value, argparse.ArgumentParser):
+            print('# ArgumentParser named `%s`' % name)
+            parameter_defs = convert_parser(value)
+            print(dump_parameter_defs(parameter_defs))
+            print()
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument('file')
+    ap.add_argument('-y', action='store_true', default=False)
+    args = ap.parse_args()
+    filename = args.file
+    if not args.y:
+        print(
+            """
+***********************************************************
+Warning: this tool will execute the Python code in file {}
+If you do not trust this file, do not continue.
+
+Enter "YES" (verbatim) to continue.
+***********************************************************
+        """.format(
+                filename
+            ),
+            file=sys.stderr,
+        )
+        if input('Continue? ') != "YES":
+            print("Stopping.")
+            return
+
+    dump_from_source(filename)
+
+
+if __name__ == '__main__':
+    main()

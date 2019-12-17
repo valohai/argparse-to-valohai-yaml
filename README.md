@@ -4,8 +4,21 @@ argparse-to-valohai-yaml
 This tool can be used to bootstrap your Valohai.yaml configuration file
 based on a Python `argparse` parser object.
 
-Usage
------
+## Command-Line Usage
+
+Extract the `argparse.ArgumentParser` -instantiating bit of your project into a temporary file.
+
+What the parser is called doesn't matter, so long as it ends up in the top scope of your file.
+
+Run
+
+```
+python argparse_to_valohai_yaml.py my_file.py
+```
+
+and copy the output YAML.
+
+## Programmatic Usage
 
 Temporarily drop `argparse_to_valohai_yaml.py` in your project's directory.
 
